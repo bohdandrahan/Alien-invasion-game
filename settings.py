@@ -15,10 +15,10 @@ class Settings():
         self.bullet_width = 3
         self.bullet_height = 15
         self.bullet_color = (255, 43, 75)
-        self.bullets_max_num = 5
+        self.bullets_max_num = 15
 
         self.star_speed_factor = 1.5
-        self.star_prob = 0.5
+        self.star_prob = 0.05
         
     def get_screen_size(self):
         return (self.screen_width, self.screen_hight)
