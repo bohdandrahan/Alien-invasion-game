@@ -25,18 +25,23 @@ def run_game():
     stars = Group()
 
 
-    game_functions.create_fleet(game_settings, screen, ufos, ship)
+    game_functions.create_fleet(game_settings, screen, ship, ufos)
 
     while True:
 
         game_functions.check_events(game_settings, screen, ship, bullets)
+
         game_functions.star_creation(game_settings, screen, stars)
 
         ship.update()
     
         game_functions.update_screen(game_settings, screen, ship, ufos, bullets, stars)
         
-        game_functions.update_bullets(bullets)
+        game_functions.update_ufos(game_settings, ufos)
+        
+        game_functions.update_bullets(bullets,ufos)
+        
+        game_functions.update_collisions(game_settings, screen, ship, ufos, bullets)
         
         game_functions.update_stars(stars, game_settings)
 

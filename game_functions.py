@@ -38,13 +38,33 @@ def star_creation(game_settings, screen, stars):
 def time_to_create_star(game_settings):
     return random.random() < game_settings.get_star_prob()
 
-def create_fleet(game_settings, screen, ufos, ship):
+def create_fleet(game_settings, screen, ship, ufos):
     num_ufo_x, num_ufo_rows = get_num_ufo_x_rows(game_settings, screen, ship) 
 
     for ufo_number in range(num_ufo_x):
         for ufo_row in range(num_ufo_rows):
             create_ufo(game_settings, screen, ufos, ufo_number, ufo_row)
 
+def check_fleet_edges(game_settings, ufos):
+    for ufo in ufos.sprites():
+        if ufo.is_wall():
+            change_fleet_direction_and_drop(game_settings, ufos)
+            break
+
+def change_fleet_direction_and_drop(game_settings, ufos):
+    drop_fleet(ufos)
+    
+    game_settings.change_fleet_direction()
+
+def drop_fleet(ufos):
+    for ufo in ufos.sprites():
+        ufo.drop()
+
+def check_and_repopulate_fleet(game_settings,screen,ship, ufos, bullets):
+    if len(ufos) == 0:
+        create_fleet(game_settings, screen, ship, ufos)
+        bullets.empty()
+        
 
 def get_num_ufo_x_rows(game_settings, screen, ship):
     return (get_num_ufo_x(game_settings, screen),
@@ -92,13 +112,27 @@ def update_screen(game_settings, screen, ship,ufos, bullets, stars):
 
     pygame.display.flip()
 
-def update_bullets(bullets):
+def update_ufos(game_settings, ufos):
+    
+    check_fleet_edges(game_settings, ufos)
+    ufos.update()
+
+    
+
+def update_bullets(bullets, ufos):
     
     bullets.update()
 
     for bullet in bullets.copy():
         if bullet.rect.bottom < 0:
             bullets.remove(bullet)
+            
+def update_collisions(game_settings, screen, ship, ufos, bullets):
+
+    collisions = pygame.sprite.groupcollide(bullets, ufos, True, True)
+
+    check_and_repopulate_fleet(game_settings, screen, ship, ufos, bullets)
+    
 
 def update_stars(stars, game_settings):
     stars.update()

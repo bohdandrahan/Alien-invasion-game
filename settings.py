@@ -6,6 +6,10 @@ class Settings():
         self.background = (101,155, 43)
 
         self.ship_speed_factor = 1.5
+
+        self.ufo_speed_factor = 1
+        self.ufo_speed_factor_drop = 10
+        self.fleet_direction = 1
         
         self.bullet_speed_factor = 1
         self.bullet_width = 3
@@ -25,6 +29,18 @@ class Settings():
     def get_ship_speed(self):
         return self.ship_speed_factor
 
+    def get_ufo_speed(self):
+        return self.ufo_speed_factor
+
+    def get_ufo_speed_drop(self):
+        return self.ufo_speed_factor_drop
+
+    def get_fleet_direction(self):
+        return self.fleet_direction
+
+    def change_fleet_direction(self):
+        self.fleet_direction *= -1
+
     def get_bullet_speed(self):
         return self.bullet_speed_factor
 
@@ -42,3 +58,5 @@ class Settings():
 
     def get_star_prob(self):
         return self.star_prob
+
+    

@@ -35,3 +35,27 @@ class Ufo(Sprite):
     def blitme(self):
         self.screen.blit(self.image, self.rect)
 
+    def update(self):
+        self.move_side()
+
+    def move_side(self):
+        self.x += (self.game_settings.get_ufo_speed() * self.game_settings.get_fleet_direction())
+        self.rect.x =  self.x
+
+    def drop(self):
+        self.y += self.game_settings.get_ufo_speed_drop()
+        self.rect.y = self.y
+
+    def is_wall(self):
+        return self.is_wall_left() or self.is_wall_right()
+
+    def is_wall_left(self):
+        if self.rect.left <= 0:
+            return True
+        else: return False
+
+    def is_wall_right(self):
+        if self.rect.right >= self.game_settings.get_screen_size()[0]:
+            return True
+        else: return False
+        
