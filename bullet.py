@@ -18,6 +18,9 @@ class Bullet(Sprite):
         self.y = float(self.rect.y)
 
         self.color = game_settings.get_bullet_color()
+    def remove_missed(self, bullets):
+        if self.rect.bottom < 0:
+            bullets.remove(self)
 
     def update(self):
             self.y -= self.game_settings.get_bullet_speed()

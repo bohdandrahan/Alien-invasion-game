@@ -3,7 +3,7 @@ class Settings():
     def  __init__(self):
         self.screen_width = 1200
         self.screen_hight = 800
-        self.background = (101,155, 43)
+        self.background = (0, 0, 0)#(101,155, 43)
 
         self.ship_speed_factor = 1.5
 
@@ -19,6 +19,8 @@ class Settings():
 
         self.star_speed_factor = 1.5
         self.star_prob = 0.05
+
+        self.explosion_speed_factor_x_y = (-2, -2)
         
     def get_screen_size(self):
         return (self.screen_width, self.screen_hight)
@@ -59,4 +61,6 @@ class Settings():
     def get_star_prob(self):
         return self.star_prob
 
-    
+    def get_explosion_speed(self):
+        return self.explosion_speed_factor_x_y
+

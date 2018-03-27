@@ -6,6 +6,7 @@ import pygame
 from bullet import Bullet
 from ufo import Ufo
 from star import Star
+from explosion import Explosion
 
 def check_events(game_settings, screen, ship, bullets):
     for event in pygame.event.get():
@@ -30,6 +31,7 @@ def check_events(game_settings, screen, ship, bullets):
 
             if event.key == (pygame.K_a):
                 ship.stop_left()
+                
 def star_creation(game_settings, screen, stars):
     if time_to_create_star(game_settings):
         new_star = Star(game_settings, screen)
@@ -97,7 +99,7 @@ def fire_bullet(game_settings, screen, ship, bullets):
         bullets.add(new_bullet)
 
 
-def update_screen(game_settings, screen, ship,ufos, bullets, stars):
+def update_screen(game_settings, screen, ship,ufos, bullets, stars, explosions):
     screen.fill(game_settings.background)
 
     for star in stars.sprites():
@@ -109,6 +111,9 @@ def update_screen(game_settings, screen, ship,ufos, bullets, stars):
 
     for bullet in bullets.sprites():
         bullet.draw()
+
+    for explosion in explosions.sprites():
+        explosion.draw()
 
     pygame.display.flip()
 
@@ -123,16 +128,31 @@ def update_bullets(bullets, ufos):
     
     bullets.update()
 
-    for bullet in bullets.copy():
-        if bullet.rect.bottom < 0:
-            bullets.remove(bullet)
+    for bullet in bullets:
+        bullet.remove_missed(bullets)
+
             
-def update_collisions(game_settings, screen, ship, ufos, bullets):
+def update_collisions(game_settings, screen, ship, ufos, bullets, explosions):
 
     collisions = pygame.sprite.groupcollide(bullets, ufos, True, True)
+    if collisions: expload(game_settings, screen, collisions, explosions)
 
     check_and_repopulate_fleet(game_settings, screen, ship, ufos, bullets)
-    
+
+def expload(game_settings, screen,  collisions, explosions):
+    for each in collisions:
+        add_new_explosion(game_settings, screen, explosions, collisions[each])
+
+def add_new_explosion(game_settings,screen, explosions, ufo_exploaded):
+    new_explosion = Explosion(game_settings, screen, ufo_exploaded)
+    explosions.add(new_explosion)
+
+
+def update_explosions(game_settings, explosions):
+    explosions.update()
+
+    for explosion in explosions:
+        explosion.remove_expired(explosions)
 
 def update_stars(stars, game_settings):
     stars.update()

@@ -30,6 +30,8 @@ class Ufo(Sprite):
 
     def get_ufo_size(self):
         return (self.rect.width, self.rect.height)
+    def get_rect(self):
+        return self.rect
         
 
     def blitme(self):
