@@ -5,10 +5,12 @@ class Settings():
         self.screen_hight = 800
         self.background = (0, 0, 0)#(101,155, 43)
 
+        self.ship_limit = 3
+
         self.ship_speed_factor = 1.5
 
         self.ufo_speed_factor = 1
-        self.ufo_speed_factor_drop = 10
+        self.ufo_speed_factor_drop = 50
         self.fleet_direction = 1
         
         self.bullet_speed_factor = 1
@@ -27,6 +29,9 @@ class Settings():
 
     def get_background(self):
         return self.background
+    
+    def get_ship_limit(self):
+        return self.ship_limit
 
     def get_ship_speed(self):
         return self.ship_speed_factor

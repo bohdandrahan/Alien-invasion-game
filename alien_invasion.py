@@ -3,6 +3,7 @@ import pygame
 from pygame.sprite import Group
 
 from settings import Settings
+from game_stats import GameStats
 from ship import Ship
 from ufo import Ufo
 import game_functions
@@ -14,8 +15,10 @@ def run_game():
     game_settings = Settings()
 
     screen = pygame.display.set_mode(game_settings.get_screen_size())
-    pygame.display.set_caption('Alien Invasion')
 
+    pygame.display.set_caption('Alien Invasion')
+    stats = GameStats(game_settings)
+    
     ship = Ship(game_settings, screen)
     
     ufos = Group()
@@ -35,13 +38,15 @@ def run_game():
 
         game_functions.star_creation(game_settings, screen, stars)
 
-        ship.update()
+        if stats.game_active:
+
+            ship.update()
+            game_functions.update_bullets(bullets,ufos)
+            game_functions.update_ufos(game_settings, screen, stats, ship, ufos, bullets, explosions)
     
         game_functions.update_screen(game_settings, screen, ship, ufos, bullets, stars, explosions)
         
-        game_functions.update_ufos(game_settings, ufos)
-        
-        game_functions.update_bullets(bullets,ufos)
+            
         
         game_functions.update_collisions(game_settings, screen, ship, ufos, bullets, explosions)
 

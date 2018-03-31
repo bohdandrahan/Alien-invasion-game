@@ -19,6 +19,9 @@ class Ship():
 
     def get_size(self):
         return (self.rect.width, self.rect.height)
+    def set_to_center(self):
+        self.rect.centerx = self.screen_rect.centerx
+        self.center = float(self.rect.centerx)
 
     def get_rect(self):
         return self.rect

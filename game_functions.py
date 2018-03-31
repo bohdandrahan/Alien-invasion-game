@@ -1,5 +1,6 @@
 import sys
 import random
+from time import sleep
 
 import pygame
 
@@ -75,13 +76,13 @@ def get_num_ufo_x_rows(game_settings, screen, ship):
 
 def get_num_ufo_x(game_settings, screen):
     ufo = Ufo(game_settings, screen)
-    ufo_width = ufo.get_ufo_size()[0]
+    ufo_width = ufo.get_size()[0]
     availible_space_x = game_settings.get_screen_size()[0] - 2 * ufo_width
     return  int(availible_space_x /(2 * ufo_width))
 
 def get_num_ufo_rows(game_settings, screen, ship):
     ufo = Ufo(game_settings, screen)
-    ufo_height = ufo.get_ufo_size()[1]
+    ufo_height = ufo.get_size()[1]
     available_space_y = (game_settings.get_screen_size()[1] - (3 * ufo_height) - ship.get_size()[1])
     return int(available_space_y / (2 * ufo_height))
     
@@ -117,12 +118,55 @@ def update_screen(game_settings, screen, ship,ufos, bullets, stars, explosions):
 
     pygame.display.flip()
 
-def update_ufos(game_settings, ufos):
+def update_ufos(game_settings,screen, stats, ship, ufos, bullets, explosions):
     
     check_fleet_edges(game_settings, ufos)
     ufos.update()
 
+    if ufo_toched_bottom_or_ship(game_settings,screen, ship, ufos, explosions):
+        stats.lost_life()
+
+        if stats.get_ships_left() != 0:
+            set_up_new_life(game_settings,screen, ship, ufos, bullets)
+
+        else:
+            game_over(stats)
+
+def set_up_new_life(game_settings, screen, ship, ufos, bullets):
+    ship.set_to_center()
+    ufos.empty()
+    bullets.empty()
+    create_fleet(game_settings, screen, ship, ufos)
+
+    #sleep(0.5)
+
+def game_over(stats):
+    stats.disactive_game()
+    print('game_over')
+    pass
+
+
+def ufo_toched_bottom_or_ship(game_settings,screen, ship, ufos, explosions):
+
+   return ufos_toched_bottom(game_settings,screen, ufos, explosions) or ufos_toched_ship(game_settings, screen, ship,  ufos, explosions)
+
+
+def ufos_toched_bottom(game_settings,screen, ufos, explosions):
     
+    result = False
+    for ufo in ufos:
+        if ufo.toched_bottom():
+            add_new_explosion(game_settings, screen, explosions, ufo)
+            print('hit bottom')
+            result = True
+    return result
+
+def ufos_toched_ship(game_settings,screen, ship, ufos, explosions):
+    if pygame.sprite.spritecollideany(ship, ufos):
+        add_new_explosion(game_settings, screen, explosions, ship)
+
+        print('ship is hit')
+        return True
 
 def update_bullets(bullets, ufos):
     
@@ -141,10 +185,10 @@ def update_collisions(game_settings, screen, ship, ufos, bullets, explosions):
 
 def expload(game_settings, screen,  collisions, explosions):
     for each in collisions:
-        add_new_explosion(game_settings, screen, explosions, collisions[each])
+        add_new_explosion(game_settings, screen, explosions, collisions[each][0])
 
-def add_new_explosion(game_settings,screen, explosions, ufo_exploaded):
-    new_explosion = Explosion(game_settings, screen, ufo_exploaded)
+def add_new_explosion(game_settings,screen, explosions, obj_exploaded):
+    new_explosion = Explosion(game_settings, screen, obj_exploaded)
     explosions.add(new_explosion)
 
 

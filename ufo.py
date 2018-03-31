@@ -21,15 +21,16 @@ class Ufo(Sprite):
         self.set_position_y(ufo_row)
 
     def set_position_x(self, ufo_number):
-        self.x = self.get_ufo_size()[0] * (1 + 2 * ufo_number)
+        self.x = self.get_size()[0] * (1 + 2 * ufo_number)
         self.rect.x = self.x
 
     def set_position_y(self, ufo_row):
-        self.y = self.get_ufo_size()[1] * (1 + 2 * ufo_row)
+        self.y = self.get_size()[1] * (1 + 2 * ufo_row)
         self.rect.y = self.y
 
-    def get_ufo_size(self):
+    def get_size(self):
         return (self.rect.width, self.rect.height)
+
     def get_rect(self):
         return self.rect
         
@@ -47,6 +48,10 @@ class Ufo(Sprite):
     def drop(self):
         self.y += self.game_settings.get_ufo_speed_drop()
         self.rect.y = self.y
+
+    def toched_bottom(self):
+        if self.rect.bottom >= self.game_settings.get_screen_size()[1]:
+            return True
 
     def is_wall(self):
         return self.is_wall_left() or self.is_wall_right()
