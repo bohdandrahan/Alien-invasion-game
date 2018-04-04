@@ -9,7 +9,7 @@ from ufo import Ufo
 from star import Star
 from explosion import Explosion
 
-def check_events(game_settings, screen, ship, bullets):
+def check_events(game_settings, screen, stats, ship, ufos, bullets,  play_button):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -32,7 +32,20 @@ def check_events(game_settings, screen, ship, bullets):
 
             if event.key == (pygame.K_a):
                 ship.stop_left()
-                
+
+        if not stats.game_active:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                check_play_button(game_settings, screen, stats, ship, ufos, bullets, play_button, mouse_x, mouse_y)
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    set_up_new_game(game_settings, screen, stats, ship, ufos, bullets)
+            
+
+def check_play_button(game_settings, screen, stats, ship, ufos, bullets, play_button, mouse_x, mouse_y):
+    if play_button.rect.collidepoint(mouse_x, mouse_y):
+        set_up_new_game(game_settings, screen, stats, ship, ufos, bullets)
+        
 def star_creation(game_settings, screen, stars):
     if time_to_create_star(game_settings):
         new_star = Star(game_settings, screen)
@@ -63,11 +76,15 @@ def drop_fleet(ufos):
     for ufo in ufos.sprites():
         ufo.drop()
 
-def check_and_repopulate_fleet(game_settings,screen,ship, ufos, bullets):
-    if len(ufos) == 0:
+def check_and_repopulate_fleet(game_settings,screen,stats, ship, ufos, bullets):
+    if len(ufos) == 0 and stats.game_active:
+        level_up(game_settings, stats)
         create_fleet(game_settings, screen, ship, ufos)
         bullets.empty()
-        
+
+def level_up(game_settings, stats):
+    print('level_up')
+    game_settings.increase_speed()
 
 def get_num_ufo_x_rows(game_settings, screen, ship):
     return (get_num_ufo_x(game_settings, screen),
@@ -100,8 +117,9 @@ def fire_bullet(game_settings, screen, ship, bullets):
         bullets.add(new_bullet)
 
 
-def update_screen(game_settings, screen, ship,ufos, bullets, stars, explosions):
+def update_screen(game_settings, screen, stats, ship, ufos, bullets, stars, explosions, play_button):
     screen.fill(game_settings.background)
+
 
     for star in stars.sprites():
         star.draw()
@@ -116,6 +134,9 @@ def update_screen(game_settings, screen, ship,ufos, bullets, stars, explosions):
     for explosion in explosions.sprites():
         explosion.draw()
 
+    if not stats.game_active:
+        play_button.draw_button()
+        
     pygame.display.flip()
 
 def update_ufos(game_settings,screen, stats, ship, ufos, bullets, explosions):
@@ -139,6 +160,12 @@ def set_up_new_life(game_settings, screen, ship, ufos, bullets):
     create_fleet(game_settings, screen, ship, ufos)
 
     #sleep(0.5)
+
+def set_up_new_game(game_settings, screen, stats, ship, ufos, bullets):
+    game_settings.initialize_dynamic_settings()
+    stats.activate_game()
+    set_up_new_life(game_settings, screen, ship, ufos, bullets)
+    stats.reset_stats()
 
 def game_over(stats):
     stats.disactive_game()
@@ -176,12 +203,12 @@ def update_bullets(bullets, ufos):
         bullet.remove_missed(bullets)
 
             
-def update_collisions(game_settings, screen, ship, ufos, bullets, explosions):
+def update_collisions(game_settings, screen, stats, ship, ufos, bullets, explosions):
 
     collisions = pygame.sprite.groupcollide(bullets, ufos, True, True)
     if collisions: expload(game_settings, screen, collisions, explosions)
 
-    check_and_repopulate_fleet(game_settings, screen, ship, ufos, bullets)
+    check_and_repopulate_fleet(game_settings, screen, stats, ship, ufos, bullets)
 
 def expload(game_settings, screen,  collisions, explosions):
     for each in collisions:
