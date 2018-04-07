@@ -9,7 +9,7 @@ from ufo import Ufo
 import game_functions
 
 from button import Button
-
+from scoreboard import CurrentScore
 
 def run_game():
     pygame.init()
@@ -21,7 +21,7 @@ def run_game():
     pygame.display.set_caption('Alien Invasion')
 
     stats = GameStats(game_settings)
-    
+
     ship = Ship(game_settings, screen)
     
     ufos = Group()
@@ -34,9 +34,12 @@ def run_game():
 
     play_button = Button(game_settings, screen, 'Play')
 
+    current_score = CurrentScore(game_settings, screen, stats)
+
     while True:
 
-        game_functions.check_events(game_settings, screen, stats, ship, ufos, bullets, play_button)
+        game_functions.check_events(game_settings, screen, 
+                                   stats, ship, ufos, bullets, play_button)
 
         game_functions.star_creation(game_settings, screen, stars)
 
@@ -44,12 +47,14 @@ def run_game():
 
             ship.update()
             game_functions.update_bullets(bullets,ufos)
-            game_functions.update_ufos(game_settings, screen, stats, ship, ufos, bullets, explosions)
+            game_functions.update_ufos(game_settings, screen, stats,
+                                      ship, ufos, bullets, explosions)
     
         game_functions.update_screen(game_settings, screen, stats, ship, ufos, bullets, stars,
-                                    explosions, play_button)
+                                    explosions, play_button, current_score)
         
-        game_functions.update_collisions(game_settings, screen, stats, ship, ufos, bullets, explosions)
+        game_functions.update_collisions(game_settings, screen,
+                                        stats, ship, ufos, bullets, explosions)
 
         game_functions.update_explosions(game_settings, explosions)
         

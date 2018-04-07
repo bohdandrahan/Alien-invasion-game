@@ -117,7 +117,8 @@ def fire_bullet(game_settings, screen, ship, bullets):
         bullets.add(new_bullet)
 
 
-def update_screen(game_settings, screen, stats, ship, ufos, bullets, stars, explosions, play_button):
+def update_screen(game_settings, screen, stats, ship, ufos,
+ bullets, stars, explosions, play_button, current_scrore):
     screen.fill(game_settings.background)
 
 
@@ -133,6 +134,8 @@ def update_screen(game_settings, screen, stats, ship, ufos, bullets, stars, expl
 
     for explosion in explosions.sprites():
         explosion.draw()
+
+    current_scrore.show()
 
     if not stats.game_active:
         play_button.draw_button()

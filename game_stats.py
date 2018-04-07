@@ -7,6 +7,8 @@ class GameStats():
     def reset_stats(self):
         self.ships_left = self.game_settings.get_ship_limit()
 
+        self.score = 0
+
     def lost_life(self):
         self.ships_left -= 1
 
@@ -18,3 +20,9 @@ class GameStats():
     
     def disactive_game(self):
         self.game_active = False
+
+    def get_score(self):
+        return self.score
+        
+
+        
