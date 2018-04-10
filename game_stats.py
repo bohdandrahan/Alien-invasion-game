@@ -1,4 +1,4 @@
-class GameStats():
+class GameStats()   :
     def __init__(self, game_settings):
         self.game_settings = game_settings
         self.reset_stats()
@@ -7,8 +7,8 @@ class GameStats():
 
     def reset_stats(self):
         self.ships_left = self.game_settings.get_ship_limit()
-
         self.score = 0
+        self.lvl = 1
 
     def lost_life(self):
         self.ships_left -= 1
@@ -27,6 +27,15 @@ class GameStats():
 
     def get_hi_score(self):
         return self.hi_score
+
+    def get_lvl(self):
+        return self.lvl
+
+    def get_ship_left(self):
+        return self.ships_left
+
+    def lvl_up(self):
+        self.lvl += 1
 
     def add_points(self, points):
         self.score += points

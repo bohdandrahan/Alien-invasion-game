@@ -11,6 +11,8 @@ import game_functions
 from button import Button
 from scoreboard import CurrentScore
 from scoreboard import HiScore
+from scoreboard import Level
+from life_board import LifeBoard
 
 def run_game():
     pygame.init()
@@ -39,6 +41,10 @@ def run_game():
 
     hi_score = HiScore(game_settings, screen, stats)
 
+    level = Level(game_settings, screen, stats)
+
+    life_board = LifeBoard(game_settings, screen, stats)
+
     while True:
 
         game_functions.check_events(game_settings, screen, 
@@ -53,9 +59,11 @@ def run_game():
             game_functions.update_ufos(game_settings, screen, stats,
                                       ship, ufos, bullets, explosions) 
    
+
         game_functions.update_screen(game_settings, screen, stats, ship, ufos, bullets, stars,
-                                    explosions, play_button, current_score, hi_score)
-        
+                                    explosions, play_button, current_score, hi_score, level)
+
+ 
         game_functions.update_collisions(game_settings, screen,
                                         stats, ship, ufos, bullets, explosions, current_score)
         game_functions.update_explosions(game_settings, explosions)

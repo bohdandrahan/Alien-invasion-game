@@ -86,6 +86,7 @@ def level_up(game_settings, stats):
     print('level_up')
     game_settings.increase_speed()
     game_settings.increase_points_for_ufo()
+    stats.lvl_up()
 
 def get_num_ufo_x_rows(game_settings, screen, ship):
     return (get_num_ufo_x(game_settings, screen),
@@ -114,7 +115,7 @@ def fire_bullet(game_settings, screen, ship, bullets):
         bullets.add(new_bullet)
 
 def update_screen(game_settings, screen, stats, ship, ufos,
- bullets, stars, explosions, play_button, current_scrore, hi_score):
+ bullets, stars, explosions, play_button, current_scrore, hi_score, level):
     screen.fill(game_settings.background)
 
     for star in stars.sprites():
@@ -132,11 +133,13 @@ def update_screen(game_settings, screen, stats, ship, ufos,
 
     current_scrore.show()
     hi_score.show()
+    level.show()
 
     if not stats.game_active:
         play_button.draw_button()
         
     pygame.display.flip()
+
 
 def update_ufos(game_settings,screen, stats, ship, ufos, bullets, explosions):
     
@@ -166,7 +169,6 @@ def set_up_new_game(game_settings, screen, stats, ship, ufos, bullets):
 
 def game_over(stats):
     stats.disactive_game()
-    print('game_over')
     pass
 
 
@@ -181,7 +183,6 @@ def ufos_toched_bottom(game_settings,screen, ufos, explosions):
     for ufo in ufos:
         if ufo.toched_bottom():
             add_new_explosion(game_settings, screen, explosions, ufo)
-            print('hit bottom')
             result = True
     return result
 

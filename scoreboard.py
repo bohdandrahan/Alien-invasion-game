@@ -1,6 +1,9 @@
 import pygame.font
 import pygame
 
+from pygame.sprite import Group
+    
+    
 class Scoreboard():
     def __init__(self, game_settings, screen, stats):
         self.game_settings = game_settings
@@ -51,6 +54,16 @@ class HiScore(Scoreboard):
         self.rect.top = 20
 
 class Level(Scoreboard):
-    #TODO
-    pass
-       
+    def get_text(self):
+        return str(self.stats.get_lvl())
+
+    def set_location(self):
+        self.rect.right = self.game_settings.get_screen_size()[0] - 20
+        self.rect.top = 85
+
+
+
+
+
+
+
