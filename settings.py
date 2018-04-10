@@ -21,6 +21,7 @@ class Settings():
         self.explosion_speed_factor_x_y = (-2, -2)
 
         self.speedup_scale = 1.1
+        self.points_scale = 1.5
         
         self.initialize_dynamic_settings()
 
@@ -28,11 +29,15 @@ class Settings():
         self.ship_speed_factor = 1.5
         self.ufo_speed_factor = 1
         self.bullet_speed_factor = 1
+        self.points_for_ufo = 10
 
     def increase_speed(self):
         self.ship_speed_factor *= self.speedup_scale
         self.ufo_speed_factor *= self.speedup_scale
         self.bullet_speed_factor *= self.speedup_scale
+
+    def increase_points_for_ufo(self):
+        self.points_for_ufo = int(self.points_for_ufo * self.points_scale)
         
     def get_screen_size(self):
         return (self.screen_width, self.screen_hight)
@@ -51,6 +56,9 @@ class Settings():
 
     def get_ufo_speed_drop(self):
         return self.ufo_speed_factor_drop
+
+    def get_points_for_ufo(self):
+        return self.points_for_ufo
 
     def get_fleet_direction(self):
         return self.fleet_direction

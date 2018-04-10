@@ -10,6 +10,7 @@ import game_functions
 
 from button import Button
 from scoreboard import CurrentScore
+from scoreboard import HiScore
 
 def run_game():
     pygame.init()
@@ -36,6 +37,8 @@ def run_game():
 
     current_score = CurrentScore(game_settings, screen, stats)
 
+    hi_score = HiScore(game_settings, screen, stats)
+
     while True:
 
         game_functions.check_events(game_settings, screen, 
@@ -48,14 +51,13 @@ def run_game():
             ship.update()
             game_functions.update_bullets(bullets,ufos)
             game_functions.update_ufos(game_settings, screen, stats,
-                                      ship, ufos, bullets, explosions)
-    
+                                      ship, ufos, bullets, explosions) 
+   
         game_functions.update_screen(game_settings, screen, stats, ship, ufos, bullets, stars,
-                                    explosions, play_button, current_score)
+                                    explosions, play_button, current_score, hi_score)
         
         game_functions.update_collisions(game_settings, screen,
-                                        stats, ship, ufos, bullets, explosions)
-
+                                        stats, ship, ufos, bullets, explosions, current_score)
         game_functions.update_explosions(game_settings, explosions)
         
         game_functions.update_stars(stars, game_settings)

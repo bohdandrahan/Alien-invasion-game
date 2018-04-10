@@ -10,7 +10,6 @@ class Scoreboard():
         self.text_color = (255, 255, 255)
         self.font = pygame.font.Font('font/Boxy-Bold.ttf', 45)
 
-
         self.get_rect()
 
     def get_image(self):
@@ -31,13 +30,27 @@ class Scoreboard():
         pass
 
     def show(self):
-        print(self.get_text())
         self.screen.blit(self.get_image(), self.get_rect())
 
 class CurrentScore(Scoreboard):
+
     def get_text(self):
         return str(self.stats.get_score())
 
     def set_location(self): 
         self.rect.right = self.game_settings.get_screen_size()[0] - 20
         self.rect.top = 20
+
+class HiScore(Scoreboard):
+
+    def get_text(self):
+        return str(self.stats.get_hi_score())
+
+    def set_location(self):
+        self.rect.centerx = self.game_settings.get_screen_size()[0] / float(2)
+        self.rect.top = 20
+
+class Level(Scoreboard):
+    #TODO
+    pass
+       
