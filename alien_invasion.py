@@ -12,7 +12,7 @@ from button import Button
 from scoreboard import CurrentScore
 from scoreboard import HiScore
 from scoreboard import Level
-from life_board import LifeBoard
+from life import Life
 
 def run_game():
     pygame.init()
@@ -43,12 +43,12 @@ def run_game():
 
     level = Level(game_settings, screen, stats)
 
-    life_board = LifeBoard(game_settings, screen, stats)
+    lifes = Group()
 
     while True:
 
         game_functions.check_events(game_settings, screen, 
-                                   stats, ship, ufos, bullets, play_button)
+                                   stats, ship, ufos, bullets, play_button, lifes)
 
         game_functions.star_creation(game_settings, screen, stars)
 
@@ -57,11 +57,11 @@ def run_game():
             ship.update()
             game_functions.update_bullets(bullets,ufos)
             game_functions.update_ufos(game_settings, screen, stats,
-                                      ship, ufos, bullets, explosions) 
+                                      ship, ufos, bullets, explosions, lifes) 
    
 
         game_functions.update_screen(game_settings, screen, stats, ship, ufos, bullets, stars,
-                                    explosions, play_button, current_score, hi_score, level)
+                                    explosions, play_button, current_score, hi_score, level, lifes)
 
  
         game_functions.update_collisions(game_settings, screen,

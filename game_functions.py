@@ -8,8 +8,9 @@ from bullet import Bullet
 from ufo import Ufo
 from star import Star
 from explosion import Explosion
+from life import Life
 
-def check_events(game_settings, screen, stats, ship, ufos, bullets,  play_button):
+def check_events(game_settings, screen, stats, ship, ufos, bullets,  play_button, lifes):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -22,7 +23,7 @@ def check_events(game_settings, screen, stats, ship, ufos, bullets,  play_button
             if event.key == (pygame.K_a):
                 ship.go_left()
                 
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE and stats.game_active:
                 fire_bullet(game_settings, screen, ship, bullets)
                 
 
@@ -39,12 +40,12 @@ def check_events(game_settings, screen, stats, ship, ufos, bullets,  play_button
                 check_play_button(game_settings, screen, stats, ship, ufos, bullets, play_button, mouse_x, mouse_y)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    set_up_new_game(game_settings, screen, stats, ship, ufos, bullets)
+                    set_up_new_game(game_settings, screen, stats, ship, ufos, bullets, lifes)
             
 
 def check_play_button(game_settings, screen, stats, ship, ufos, bullets, play_button, mouse_x, mouse_y):
     if play_button.rect.collidepoint(mouse_x, mouse_y):
-        set_up_new_game(game_settings, screen, stats, ship, ufos, bullets)
+        set_up_new_game(game_settings, screen, stats, ship, ufos, bullets, lifes)
         
 def star_creation(game_settings, screen, stars):
     if time_to_create_star(game_settings):
@@ -114,8 +115,30 @@ def fire_bullet(game_settings, screen, ship, bullets):
         new_bullet = Bullet(game_settings, screen, ship)
         bullets.add(new_bullet)
 
+def create_lifes(game_settings, screen, stats, lifes):
+    for number in range(stats.get_ships_left()):
+        life = Life(game_settings, screen, number)
+        life.set_position(len(lifes)) 
+        lifes.add(life)
+
+def explode_life(game_settings, screen, stats, explosions, lifes):
+    stats.lost_life()
+    right_life = find_right_life(lifes)
+    lifes.remove(right_life)
+    add_new_explosion(game_settings, screen, explosions, right_life)
+    
+
+def find_right_life(lifes):
+    right_life = None
+    for life in lifes:
+        if right_life != None:
+            if right_life.get_num() > life.get_num():
+                right_life = life
+        else: right_life = life
+    return right_life
+
 def update_screen(game_settings, screen, stats, ship, ufos,
- bullets, stars, explosions, play_button, current_scrore, hi_score, level):
+ bullets, stars, explosions, play_button, current_scrore, hi_score, level, lifes):
     screen.fill(game_settings.background)
 
     for star in stars.sprites():
@@ -134,20 +157,20 @@ def update_screen(game_settings, screen, stats, ship, ufos,
     current_scrore.show()
     hi_score.show()
     level.show()
-
+    lifes.draw(screen)
     if not stats.game_active:
         play_button.draw_button()
-        
     pygame.display.flip()
 
 
-def update_ufos(game_settings,screen, stats, ship, ufos, bullets, explosions):
+def update_ufos(game_settings,screen, stats, ship, ufos, bullets, explosions, lifes):
     
     check_fleet_edges(game_settings, ufos)
     ufos.update()
 
     if ufo_toched_bottom_or_ship(game_settings,screen, ship, ufos, explosions):
-        stats.lost_life()
+        explode_life(game_settings, screen, stats, explosions, lifes)
+
 
         if stats.get_ships_left() != 0:
             set_up_new_life(game_settings,screen, ship, ufos, bullets)
@@ -161,11 +184,12 @@ def set_up_new_life(game_settings, screen, ship, ufos, bullets):
     bullets.empty()
     create_fleet(game_settings, screen, ship, ufos)
 
-def set_up_new_game(game_settings, screen, stats, ship, ufos, bullets):
+def set_up_new_game(game_settings, screen, stats, ship, ufos, bullets, lifes):
     game_settings.initialize_dynamic_settings()
     stats.activate_game()
     set_up_new_life(game_settings, screen, ship, ufos, bullets)
     stats.reset_stats()
+    create_lifes(game_settings, screen, stats, lifes)
 
 def game_over(stats):
     stats.disactive_game()
@@ -205,7 +229,7 @@ def update_collisions(game_settings, screen, stats, ship, ufos, bullets, explosi
 
     collisions = pygame.sprite.groupcollide(bullets, ufos, True, True)
     if collisions:
-        expload(game_settings, screen, collisions, explosions)
+        explode(game_settings, screen, collisions, explosions)
         for each in collisions:
             update_scores(game_settings, stats)
 
@@ -216,12 +240,12 @@ def update_scores(game_settings, stats):
     stats.check_and_update_hi_score()
 
 
-def expload(game_settings, screen,  collisions, explosions):
+def explode(game_settings, screen,  collisions, explosions):
     for each in collisions:
         add_new_explosion(game_settings, screen, explosions, collisions[each][0])
 
-def add_new_explosion(game_settings,screen, explosions, obj_exploaded):
-    new_explosion = Explosion(game_settings, screen, obj_exploaded)
+def add_new_explosion(game_settings,screen, explosions, obj_exploded):
+    new_explosion = Explosion(game_settings, screen, obj_exploded)
     explosions.add(new_explosion)
 
 

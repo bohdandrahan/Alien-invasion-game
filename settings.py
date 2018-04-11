@@ -7,13 +7,12 @@ class Settings():
 
         self.ship_limit = 3
 
-        self.ufo_speed_factor_drop = 50
         self.fleet_direction = 1
         
         self.bullet_width = 3
         self.bullet_height = 15
         self.bullet_color = (255, 43, 75)
-        self.bullets_max_num = 15
+        self.bullets_max_num = 4 
 
         self.star_speed_factor = 1.5
         self.star_prob = 0.05
@@ -28,6 +27,7 @@ class Settings():
     def initialize_dynamic_settings(self):
         self.ship_speed_factor = 1.5
         self.ufo_speed_factor = 1
+        self.ufo_speed_factor_drop =  10
         self.bullet_speed_factor = 1
         self.points_for_ufo = 10
 
@@ -35,6 +35,7 @@ class Settings():
         self.ship_speed_factor *= self.speedup_scale
         self.ufo_speed_factor *= self.speedup_scale
         self.bullet_speed_factor *= self.speedup_scale
+        self.ufo_speed_factor_drop += 1
 
     def increase_points_for_ufo(self):
         self.points_for_ufo = int(self.points_for_ufo * self.points_scale)
