@@ -4,6 +4,7 @@ from time import sleep
 
 import pygame
 
+import music
 from bullet import Bullet
 from ufo import Ufo
 from star import Star
@@ -190,10 +191,11 @@ def set_up_new_game(game_settings, screen, stats, ship, ufos, bullets, lifes):
     set_up_new_life(game_settings, screen, ship, ufos, bullets)
     stats.reset_stats()
     create_lifes(game_settings, screen, stats, lifes)
+    music.play_game_music()
 
 def game_over(stats):
     stats.disactive_game()
-    pass
+    music.play_menu_music()
 
 
 def ufo_toched_bottom_or_ship(game_settings,screen, ship, ufos, explosions):

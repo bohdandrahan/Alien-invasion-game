@@ -2,6 +2,7 @@ import sys
 import pygame
 from pygame.sprite import Group
 
+
 from settings import Settings
 from game_stats import GameStats
 from ship import Ship
@@ -13,9 +14,13 @@ from scoreboard import CurrentScore
 from scoreboard import HiScore
 from scoreboard import Level
 from life import Life
+import music
 
 def run_game():
+
     pygame.init()
+
+    music.play_menu_music()
 
     game_settings = Settings()
 
