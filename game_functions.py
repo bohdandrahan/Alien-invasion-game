@@ -38,13 +38,13 @@ def check_events(game_settings, screen, stats, ship, ufos, bullets,  play_button
         if not stats.game_active:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
-                check_play_button(game_settings, screen, stats, ship, ufos, bullets, play_button, mouse_x, mouse_y)
+                check_play_button(game_settings, screen, stats, ship, ufos, bullets, play_button, mouse_x, mouse_y, lifes)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     set_up_new_game(game_settings, screen, stats, ship, ufos, bullets, lifes)
             
 
-def check_play_button(game_settings, screen, stats, ship, ufos, bullets, play_button, mouse_x, mouse_y):
+def check_play_button(game_settings, screen, stats, ship, ufos, bullets, play_button, mouse_x, mouse_y, lifes):
     if play_button.rect.collidepoint(mouse_x, mouse_y):
         set_up_new_game(game_settings, screen, stats, ship, ufos, bullets, lifes)
         
